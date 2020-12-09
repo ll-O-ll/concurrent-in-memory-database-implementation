@@ -1,51 +1,227 @@
 
--------- /nfs/ug/cad/cad2/ece326f/tester/scripts/lab1-07-scan.py --------
+-------- /nfs/ug/cad/cad2/ece326f/tester/scripts/lab3-01-insert.py --------
 
-[
-1. User:
-    1. firstName : string
-    2. lastName : string
-    3. height : float
-    4. age : integer
-, 
-2. Account:
-    1. user : foreign(1)
-    2. type : string
-    3. balance : float
-]
-Listening: TcpListener { addr: V4(127.0.0.1:4265), fd: 3 }
-Connected to 127.0.0.1:50408
-Request { table_id: 1, command: Query(1, 2, Text("James")) }
-Query([1])
-Request { table_id: 1, command: Query(4, 4, Integer(40)) }
-Query([1, 3])
-Request { table_id: 1, command: Query(3, 5, Float(170.0)) }
-Query([1, 2])
-Request { table_id: 2, command: Query(0, 1, Null) }
-Query([1, 2, 3, 4])
-Request { table_id: 2, command: Query(0, 3, Foreign(3)) }
-Query([1, 2, 4])
+running test number 1
+PASS: Insert on table 1
+PASS: Insert on table 2
+PASS: Insert on table 1 returned BAD_VALUE
+PASS: Insert on table 1 returned BAD_VALUE
+PASS: Insert on table 1 returned BAD_TABLE
+PASS: Insert on table 1 returned BAD_ROW
+PASS: Insert on table 1 returned BAD_ROW
+PASS: GET on table 1
+PASS: GET on table 1
+PASS: Insert on table 2 returned BAD_FOREIGN
+PASS: Get on table 2 returned NOT_FOUND
+PASS: Get on table 2 returned NOT_FOUND
+PASS: Get on table 69 returned BAD_TABLE
+PASS: Get on table 0 returned BAD_TABLE
+PASS: No duplicate id found during mass insertion
+TOTAL MARKS: 18 of 18
+DONE 18
 
--------- /nfs/ug/cad/cad2/ece326f/tester/scripts/lab1-07-scan.py --------
+-------- /nfs/ug/cad/cad2/ece326f/tester/scripts/lab3-02-update.py --------
 
-[
-1. Album:
-    1. name : string
-    2. artist : string
-    3. genre : string
-    4. price : float
-, 
-2. Song:
-    1. name : string
-    2. length : float
-    3. album : foreign(1)
-    4. likes : integer
-]
-Listening: TcpListener { addr: V4(127.0.0.1:7830), fd: 3 }
-Connected to 127.0.0.1:53578
-Request { table_id: 2, command: Query(4, 5, Integer(1000000)) }
-Query([1])
-Request { table_id: 1, command: Query(4, 4, Float(10.0)) }
-Query([])
-Request { table_id: 1, command: Query(3, 3, Text("Pop")) }
-Query([2])
+running test number 2
+PASS: UPDATE on table 1
+PASS: GET after UPDATE on table 1
+PASS: GET after UPDATE on table 1
+PASS: GET on table 1
+PASS: GET on table 1
+PASS: UPDATE on table 2
+PASS: GET after UPDATE on table 2
+PASS: UPDATE on table 2 returned BAD_FOREIGN
+PASS: UPDATE on table 1 returned BAD_ROW
+PASS: UPDATE on table 1 returned BAD_VALUE
+PASS: UPDATE on table 1 returned TXN_ABORT
+PASS: UPDATE on table 1 with version = 0
+PASS: UPDATE on table 1 returned NOT_FOUND
+PASS: GET after UPDATE x1000 on table 2
+TOTAL MARKS: 17 of 17
+DONE 17
+
+-------- /nfs/ug/cad/cad2/ece326f/tester/scripts/lab3-03-drop.py --------
+
+running test number 3
+PASS: Drop on table 0 returned BAD_TABLE
+PASS: Drop on User 1
+PASS: Drop on Account 1
+PASS: Account 2 is there
+PASS: Cascade drop on Account 2
+PASS: Drop on Student 2
+PASS: Cascade drop on Assignment 2
+PASS: Assignment 1 is there
+PASS: Cascade drop on Student 1
+PASS: Cascade drop on Assignment 1 
+INFO: dropped User 31
+INFO: cascade dropped 5 accounts
+INFO: cascade dropped 24 debts
+INFO: dropped User 36
+INFO: cascade dropped 92 debts
+TOTAL MARKS: 17 of 17
+DONE 17
+
+-------- /nfs/ug/cad/cad2/ece326f/tester/scripts/lab3-04-scan.py --------
+
+running test number 4
+PASS: SCAN:OP_NE on User 1
+PASS: SCAN:OP_EQ on User 1
+PASS: SCAN returned BAD_QUERY on bad operator
+PASS: SCAN returned BAD_QUERY on unsupported operator for foreign
+PASS: SCAN:OP_EQ on Table 1
+PASS: SCAN:OP_LT on Table 1
+PASS: SCAN:OP_GE on Table 1
+PASS: SCAN:OP_EQ on Table 1
+PASS: SCAN:OP_NE on Table 1
+PASS: SCAN:OP_GT on Table 1
+PASS: SCAN:OP_LE on Table 1
+PASS: SCAN:OP_GE on Table 1
+PASS: SCAN returned BAD_QUERY on column type mismatch
+PASS: SCAN:OP_NE on Table 3
+PASS: SCAN:OP_EQ on Table 3
+PASS: SCAN:OP_AL on Table 3
+PASS: SCAN returned BAD_QUERY when column id is not 0 for OP_AL
+PASS: SCAN returned BAD_TABLE on table_id 0
+TOTAL MARKS: 18 of 18
+DONE 18
+
+-------- /nfs/ug/cad/cad2/ece326f/tester/scripts/lab3-05-stress.py --------
+
+running test number 5
+EXPECTING: NOT_FOUND or BAD_FOREIGN
+PASS: UPDATE returned code 9
+EXPECTING: NOT_FOUND
+PASS: UPDATE account after cascade delete returned NOT_FOUND
+People greater than 30 years old: 13 11 10 7 5 12 8 9 3 
+Table 1 Row 9: Vnjhaionbh Yeeegyqfyhfiigqdcdiwyx 4.84775 50 
+Table 1 Row 9: Vfvzfbazfks Mrhbkrihgntjlxkvd 6.35366 82 
+Does Not Exist: Table 1 Row 4
+People greater than 30 years old: 13 11 10 7 5 12 8 9 3 
+Table 1 Row 14: Kmchpecqlu Zn 2.92834 70 
+Table 1 Row 15: Pocfpqwi Xj 4.76981 36 
+Table 1 Row 16: Pzgyxfk Bkmj 6.92267 14 
+Table 1 Row 17: Cxel Tpqdfinmpxqexxgfx 7.59482 99 
+Table 1 Row 18: Rw Epluhf 4.29434 59 
+Table 1 Row 19: Cmjidxclebavtrg Owlk 4.30611 35 
+Table 1 Row 20: Ldr Awcez 3.76694 40 
+Table 1 Row 21: Kppirthvxeqiib Cylkfqufdln 3.41771 59 
+Table 1 Row 22: Atlpxm Jrsdyvonlk 4.59397 99 
+Table 1 Row 23: Kcwdgwawknj Qgpvexvyoqmqucm 3.12748 17 
+Table 1 Row 24: Jjrxznan Kushgihzukrtcqwkxt 4.23317 67 
+Table 1 Row 25: Xhggvubsctsylev Nnddmxtic 7.92983 23 
+Table 1 Row 26: Wvygacpqmtajknl Xhflito 6.24069 22 
+Table 1 Row 27: Efqmaezyy Si 7.77638 96 
+Table 1 Row 28: Xre Xupxzoxxepi 3.29035 69 
+Table 1 Row 29: Paumtobmdfkxk Hmthmllcklkiutmxadx 3.94598 39 
+Table 1 Row 30: Nmdzwxvk Vqusiledsvdhlncj 3.97141 83 
+Table 1 Row 31: Yyplesdbv Mkpxwglsaseh 7.39197 31 
+Table 1 Row 32: Cmfml Bqspssnzn 5.33075 91 
+Table 1 Row 33: Aflguzpvpjk Dzgrp 2.07153 99 
+Table 1 Row 34: Ztii Xxjsqrwijvcb 2.05482 8 
+Table 1 Row 35: Ftrhvisd Qjywklrwxeqrgjkrvvxfnl 4.82709 38 
+Table 1 Row 36: Fz Oqaiiaoktrornivu 3.15537 23 
+Table 1 Row 37: Onbdhzuueanagvj Antxudfacxcxfuevjizq 2.28272 15 
+Table 1 Row 38: Wzza Yyunqr 7.15983 14 
+Table 1 Row 39: Gizwzxjujwq Huvvcayotvykfecqoqcuz 4.63912 77 
+Table 1 Row 40: Bn Lekxxrzmtb 5.01765 82 
+Table 1 Row 41: Alyzlpazkbl Kcxnmjgqdjnecbwoqebsrz 2.43034 57 
+Table 1 Row 42: Gmx Dqgxixdkxzqglztz 2.3121 70 
+Table 1 Row 43: Ytxbypjvyhykg Ao 5.76889 23 
+Table 1 Row 44: Fbkeruz Dyblydzjf 4.14992 72 
+Table 1 Row 45: Sxviidfweeoqolj Kpyzp 2.15307 86 
+Table 1 Row 46: Cxjcewhrisik Pxfdxhpwbvdpp 6.66821 37 
+Table 1 Row 47: Tthdoyctbzdqx Mctb 5.63888 88 
+Table 1 Row 48: Ppccd Qdenl 3.27601 16 
+Table 1 Row 49: Kfrojgboqo Gji 2.83373 87 
+Table 1 Row 50: Abdiaptvq Mlkioezqe 3.96263 35 
+Table 1 Row 51: Fhmxn Sf 6.50428 55 
+Table 1 Row 52: Snkdm Nltlcpeoyompopxsihj 7.3981 83 
+Table 1 Row 53: Xuwmwonut Ibhtznwlivs 3.98352 21 
+Table 1 Row 54: Wshwjspywam Imshzlxckspgkqzranrw 7.11648 27 
+Table 1 Row 55: Rb Txbn 4.87378 17 
+Table 1 Row 56: Llihmhbgqwqs Xzrqvqnbrpjj 5.43055 93 
+Table 1 Row 57: Bepxu Etssgijbpynnkwn 4.28088 83 
+Table 1 Row 58: Urgvg Iv 2.65699 85 
+Table 1 Row 59: Dve Pxinfovahclo 5.48136 40 
+Table 1 Row 60: Subwpklgxwclzug Sszrmqctpy 3.88144 40 
+Table 1 Row 61: Bpxwe Gdcvvchpzkuktxsglyq 6.14476 70 
+Table 1 Row 62: Pxtjynycylcnw Ijozcbguz 6.21709 18 
+Table 1 Row 63: Axlbdga Fswaitsqpfghfvdfydsw 6.12214 25 
+People greater than 30 years old: 13 11 10 7 5 12 8 9 3 
+Table 2 Row 69: pk(9) Savings 339.251 
+Table 2 Row 89: pk(64) Savings 59.1801 
+Does Not Exist: Table 2 Row 89
+Does Not Exist: Table 2 Row 91
+Does Not Exist: Table 2 Row 93
+Does Not Exist: Table 2 Row 95
+Does Not Exist: Table 2 Row 97
+Does Not Exist: Table 2 Row 99
+Does Not Exist: Table 2 Row 101
+Does Not Exist: Table 2 Row 103
+Does Not Exist: Table 2 Row 105
+Does Not Exist: Table 2 Row 107
+Balances less than 100.0: 72 81 102 
+Does Not Exist: Table 2 Row 69
+Does Not Exist: Table 2 Row 70
+Does Not Exist: Table 2 Row 71
+Does Not Exist: Table 2 Row 72
+Does Not Exist: Table 2 Row 73
+Does Not Exist: Table 2 Row 74
+Does Not Exist: Table 2 Row 75
+Does Not Exist: Table 2 Row 76
+Does Not Exist: Table 2 Row 77
+Does Not Exist: Table 2 Row 78
+Does Not Exist: Table 2 Row 79
+Does Not Exist: Table 2 Row 80
+Does Not Exist: Table 2 Row 81
+Does Not Exist: Table 2 Row 82
+Does Not Exist: Table 2 Row 83
+Does Not Exist: Table 2 Row 84
+Does Not Exist: Table 2 Row 85
+Does Not Exist: Table 2 Row 86
+Does Not Exist: Table 2 Row 87
+Does Not Exist: Table 2 Row 88
+Balances less than 100.0: 102 
+TOTAL MARKS: 10 of 10
+DONE 10
+
+-------- /nfs/ug/cad/cad2/ece326f/tester/scripts/lab3-06-parallel.py --------
+
+Received 147/500 bribes from politician 0
+Received 121/500 bribes from politician 1
+Received 149/500 bribes from politician 2
+Received 141/500 bribes from politician 3
+Jemin Manufacturing LTD:
+President: Andrew Choi
+Balance: 2607033.000000
+Number of Employees: 42
+DONE 5
+
+-------- /nfs/ug/cad/cad2/ece326f/tester/scripts/lab3-07-speedup.py --------
+
+running test number 7
+DEBUG: inserting 50000 rows on client 1 took 1.194688 seconds
+DEBUG: getting 50000 rows on client 1 took 0.956240 seconds
+DEBUG: dropping 50000 rows on client 1 took 0.771012 seconds
+INFO: took 2.922870 seconds to complete serial task
+DONE 1
+
+running test number 7b
+DEBUG: inserting 12500 rows on client 2 took 0.286120 seconds
+DEBUG: inserting 12500 rows on client 3 took 0.286979 seconds
+DEBUG: inserting 12500 rows on client 1 took 0.287169 seconds
+DEBUG: inserting 12500 rows on client 4 took 0.292842 seconds
+DEBUG: getting 12500 rows on client 2 took 0.231900 seconds
+DEBUG: getting 12500 rows on client 1 took 0.236154 seconds
+DEBUG: getting 12500 rows on client 3 took 0.237547 seconds
+DEBUG: getting 12500 rows on client 4 took 0.240094 seconds
+DEBUG: dropping 12500 rows on client 2 took 0.272271 seconds
+DEBUG: dropping 12500 rows on client 1 took 0.274221 seconds
+DEBUG: dropping 12500 rows on client 3 took 0.273854 seconds
+DEBUG: dropping 12500 rows on client 4 took 0.272538 seconds
+INFO: took 0.806365 seconds to complete parallel tasks
+DONE 1
+
+-------- /nfs/ug/cad/cad2/ece326f/tester/scripts/lab3-09-synch.py --------
+
+DONE 5
